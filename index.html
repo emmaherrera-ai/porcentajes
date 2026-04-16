@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dominando los Porcentajes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-active { border-bottom: 3px solid #4f46e5; color: #4f46e5; }
+        .card-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
+        .method-card:hover { transform: translateY(-5px); transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white py-8 px-4 text-center shadow-lg">
+        <h1 class="text-3xl md:text-4xl font-bold">Porcentajes Learning 🎓</h1>
+        <p class="mt-2 text-indigo-100 opacity-90">De lo básico a lo experto, practica a tu ritmo.</p>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="max-w-4xl mx-auto flex justify-around">
+            <button onclick="showSection('lab')" id="nav-lab" class="py-4 px-2 font-semibold tab-active">Laboratorio</button>
+            <button onclick="showSection('methods')" id="nav-methods" class="py-4 px-2 font-semibold text-gray-500">Métodos</button>
+            <button onclick="showSection('practice')" id="nav-practice" class="py-4 px-2 font-semibold text-gray-500">Practicar</button>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto p-4 md:p-8">
+
+        <!-- SECTION: LABORATORIO -->
+        <section id="section-lab" class="space-y-8">
+            <div class="bg-white p-6 rounded-2xl card-shadow">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <span class="mr-2">🧪</span> El Calculador Interactivo
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">¿Cuál es el...</label>
+                            <div class="flex items-center space-x-2">
+                                <input type="number" id="lab-percent" value="20" class="w-full p-3 border-2 border-indigo-100 rounded-xl focus:border-indigo-500 outline-none text-xl font-bold">
+                                <span class="text-2xl font-bold text-indigo-600">%</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">...de esta cantidad?</label>
+                            <input type="number" id="lab-total" value="150" class="w-full p-3 border-2 border-indigo-100 rounded-xl focus:border-indigo-500 outline-none text-xl font-bold">
+                        </div>
+                        <button onclick="calculateLab()" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition">Calcular Ahora</button>
+                    </div>
+
+                    <div id="lab-result-box" class="bg-indigo-50 p-6 rounded-2xl border-2 border-indigo-100 text-center">
+                        <p class="text-indigo-600 font-semibold uppercase tracking-wider text-sm">Resultado</p>
+                        <div id="lab-result-value" class="text-5xl font-black text-indigo-900 my-2">30</div>
+                        <p id="lab-explanation" class="text-gray-600 text-sm italic">20% de 150 es 30</p>
+                    </div>
+                </div>
+
+                <!-- Visual Representation -->
+                <div class="mt-10">
+                    <p class="text-sm font-bold text-gray-500 mb-4 uppercase">Representación Visual (Cuadrícula de 100)</p>
+                    <div id="grid-container" class="grid grid-cols-10 gap-1 aspect-square max-w-[300px] mx-auto">
+                        <!-- JS fills this -->
+                    </div>
+                    <p class="text-center mt-4 text-xs text-gray-400">Cada cuadro representa el 1% del total.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: METODOS -->
+        <section id="section-methods" class="hidden space-y-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">¿Cómo se calcula? 3 Caminos</h2>
+            
+            <!-- Method 1 -->
+            <div class="method-card bg-white p-6 rounded-2xl border-l-8 border-blue-500 shadow-sm">
+                <h3 class="font-bold text-xl text-blue-600">1. El Camino Decimal (El más rápido)</h3>
+                <p class="text-gray-600 mt-2">Divide el porcentaje entre 100 y multiplícalo por el total.</p>
+                <div class="bg-gray-50 p-4 mt-4 rounded-lg font-mono text-sm">
+                    Ejemplo: 15% de 200 <br>
+                    15 ÷ 100 = 0.15 <br>
+                    0.15 × 200 = <span class="text-blue-600 font-bold text-lg">30</span>
+                </div>
+            </div>
+
+            <!-- Method 2 -->
+            <div class="method-card bg-white p-6 rounded-2xl border-l-8 border-emerald-500 shadow-sm">
+                <h3 class="font-bold text-xl text-emerald-600">2. La Regla de Tres (El más lógico)</h3>
+                <p class="text-gray-600 mt-2">Si el 100% es el total, ¿cuánto es X%?</p>
+                <div class="bg-gray-50 p-4 mt-4 rounded-lg font-mono text-sm">
+                    100% ---- 200 <br>
+                    15% ---- X <br>
+                    X = (15 × 200) ÷ 100 = <span class="text-emerald-600 font-bold text-lg">30</span>
+                </div>
+            </div>
+
+            <!-- Method 3 -->
+            <div class="method-card bg-white p-6 rounded-2xl border-l-8 border-amber-500 shadow-sm">
+                <h3 class="font-bold text-xl text-amber-600">3. Trucos Mentales (Para el supermercado)</h3>
+                <ul class="list-disc list-inside mt-2 text-gray-600 space-y-2">
+                    <li><strong>10%:</strong> Solo corre la coma un lugar a la izquierda (10% de 200 = 20).</li>
+                    <li><strong>50%:</strong> Es la mitad exacta.</li>
+                    <li><strong>25%:</strong> Es la mitad de la mitad.</li>
+                    <li><strong>1%:</strong> Corre la coma dos lugares.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SECTION: PRÁCTICA -->
+        <section id="section-practice" class="hidden">
+            <div class="bg-white p-6 rounded-2xl card-shadow">
+                <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+                    <h2 class="text-2xl font-bold text-gray-800">Zona de Entrenamiento</h2>
+                    <div class="flex space-x-2">
+                        <button onclick="setDifficulty('easy')" id="btn-easy" class="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200">Básico (12 años)</button>
+                        <button onclick="setDifficulty('hard')" id="btn-hard" class="px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-500 border border-gray-200">Avanzado (Adultos)</button>
+                    </div>
+                </div>
+
+                <div id="quiz-container" class="space-y-6 py-4">
+                    <div id="question-text" class="text-2xl font-semibold text-center text-gray-700 min-h-[80px] flex items-center justify-center">
+                        Generando pregunta...
+                    </div>
+                    
+                    <div class="max-w-[250px] mx-auto">
+                        <input type="number" id="quiz-answer" placeholder="Tu respuesta..." class="w-full p-4 border-2 border-gray-100 rounded-2xl text-center text-2xl outline-none focus:border-indigo-500">
+                    </div>
+
+                    <button onclick="checkAnswer()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg hover:bg-indigo-700 shadow-md">Comprobar</button>
+                    
+                    <div id="quiz-feedback" class="text-center font-bold h-6"></div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-gray-100 flex justify-between items-center">
+                    <div class="text-sm text-gray-500">Racha: <span id="streak" class="font-bold text-indigo-600">0</span></div>
+                    <button onclick="generateQuestion()" class="text-indigo-600 font-semibold text-sm hover:underline">Saltar / Nueva pregunta</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-10 text-gray-400 text-sm">
+        Hecho para aprender en familia • 2024
+    </footer>
+
+    <script>
+        let currentSection = 'lab';
+        let difficulty = 'easy';
+        let currentQuestion = { percent: 0, total: 0, answer: 0 };
+        let streak = 0;
+
+        function showSection(sectionId) {
+            // Hide all
+            document.getElementById('section-lab').classList.add('hidden');
+            document.getElementById('section-methods').classList.add('hidden');
+            document.getElementById('section-practice').classList.add('hidden');
+            
+            // Show target
+            document.getElementById(`section-${sectionId}`).classList.remove('hidden');
+            
+            // Update nav styles
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${sectionId}`).classList.add('tab-active');
+            document.getElementById(`nav-${sectionId}`).classList.remove('text-gray-500');
+
+            if(sectionId === 'practice' && currentQuestion.answer === 0) {
+                generateQuestion();
+            }
+        }
+
+        // --- LAB LOGIC ---
+        function calculateLab() {
+            const p = parseFloat(document.getElementById('lab-percent').value) || 0;
+            const t = parseFloat(document.getElementById('lab-total').value) || 0;
+            const res = (p * t) / 100;
+            
+            document.getElementById('lab-result-value').innerText = res % 1 === 0 ? res : res.toFixed(2);
+            document.getElementById('lab-explanation').innerText = `${p}% de ${t} se calcula como (${p} × ${t}) ÷ 100 = ${res}`;
+            
+            updateGrid(p);
+        }
+
+        function updateGrid(percent) {
+            const container = document.getElementById('grid-container');
+            container.innerHTML = '';
+            const filledCount = Math.min(100, Math.max(0, Math.round(percent)));
+            
+            for (let i = 0; i < 100; i++) {
+                const cell = document.createElement('div');
+                cell.className = `w-full h-full rounded-sm ${i < filledCount ? 'bg-indigo-500' : 'bg-gray-200'}`;
+                container.appendChild(cell);
+            }
+        }
+
+        // --- PRACTICE LOGIC ---
+        function setDifficulty(level) {
+            difficulty = level;
+            document.getElementById('btn-easy').className = level === 'easy' 
+                ? 'px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200'
+                : 'px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-500 border border-gray-200';
+            
+            document.getElementById('btn-hard').className = level === 'hard'
+                ? 'px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200'
+                : 'px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-500 border border-gray-200';
+            
+            generateQuestion();
+        }
+
+        function generateQuestion() {
+            let p, t;
+            const feedback = document.getElementById('quiz-feedback');
+            feedback.innerText = '';
+            document.getElementById('quiz-answer').value = '';
+
+            if (difficulty === 'easy') {
+                // Multiples of 10 or 5 for kids to learn logic
+                const easyPercents = [10, 20, 25, 50, 75, 100];
+                p = easyPercents[Math.floor(Math.random() * easyPercents.length)];
+                t = Math.floor(Math.random() * 20) * 10 + 10; // Multiples of 10 up to 200
+            } else {
+                // Realistic adult numbers (discounts, taxes)
+                const hardPercents = [12, 15, 18, 21, 33, 45, 7, 0.5];
+                p = hardPercents[Math.floor(Math.random() * hardPercents.length)];
+                t = Math.floor(Math.random() * 1000) + 50;
+            }
+
+            currentQuestion = {
+                percent: p,
+                total: t,
+                answer: (p * t) / 100
+            };
+
+            const scenarios = [
+                `¿Cuánto es el ${p}% de ${t}?`,
+                `Una tienda tiene un ${p}% de descuento en un producto de $${t}. ¿Cuánto te ahorras?`,
+                `Si el total es ${t}, ¿cuánto representa el ${p}%?`
+            ];
+
+            document.getElementById('question-text').innerText = scenarios[Math.floor(Math.random() * scenarios.length)];
+        }
+
+        function checkAnswer() {
+            const userVal = parseFloat(document.getElementById('quiz-answer').value);
+            const feedback = document.getElementById('quiz-feedback');
+            
+            if (isNaN(userVal)) return;
+
+            // Allow small margin for floating point errors
+            if (Math.abs(userVal - currentQuestion.answer) < 0.1) {
+                feedback.innerText = "¡Correcto! ✨";
+                feedback.className = "text-center font-bold text-green-500";
+                streak++;
+                setTimeout(generateQuestion, 1500);
+            } else {
+                feedback.innerText = `Casi... la respuesta era ${currentQuestion.answer.toFixed(1)}`;
+                feedback.className = "text-center font-bold text-red-500";
+                streak = 0;
+            }
+            document.getElementById('streak').innerText = streak;
+        }
+
+        // Init
+        window.onload = () => {
+            calculateLab();
+            updateGrid(20);
+        };
+    </script>
+</body>
+</html>
