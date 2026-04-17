@@ -46,13 +46,13 @@
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Porcentaje</label>
                             <div class="flex items-center space-x-2">
-                                <input type="number" id="lab-percent" value="20" oninput="calculateA()" class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-indigo-400 outline-none text-xl font-bold">
+                                <input type="text" id="lab-percent" value="20" oninput="handleInput(this); calculateA()" class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-indigo-400 outline-none text-xl font-bold">
                                 <span class="text-2xl font-bold text-indigo-600">%</span>
                             </div>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase mb-1">De la cantidad total</label>
-                            <input type="number" id="lab-total" value="1500" oninput="calculateA()" class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-indigo-400 outline-none text-xl font-bold">
+                            <input type="text" id="lab-total" value="1,500" oninput="handleInput(this); calculateA()" class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-indigo-400 outline-none text-xl font-bold">
                         </div>
                         <div class="bg-indigo-50 p-4 rounded-xl text-center">
                             <p class="text-indigo-600 font-bold text-xs uppercase">Resultado</p>
@@ -72,11 +72,11 @@
                     <div class="space-y-4">
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Cantidad alcanzada / Vendida</label>
-                            <input type="number" id="lab-part-b" value="50" oninput="calculateB()" class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-emerald-400 outline-none text-xl font-bold">
+                            <input type="text" id="lab-part-b" value="50" oninput="handleInput(this); calculateB()" class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-emerald-400 outline-none text-xl font-bold">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase mb-1">De una meta de / Total</label>
-                            <input type="number" id="lab-total-b" value="180" oninput="calculateB()" class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-emerald-400 outline-none text-xl font-bold">
+                            <input type="text" id="lab-total-b" value="180" oninput="handleInput(this); calculateB()" class="w-full p-3 bg-gray-50 border-2 border-gray-100 rounded-xl focus:border-emerald-400 outline-none text-xl font-bold">
                         </div>
                         <div class="bg-emerald-50 p-4 rounded-xl text-center">
                             <p class="text-emerald-600 font-bold text-xs uppercase">Porcentaje logrado</p>
@@ -153,7 +153,7 @@
                     </div>
                     
                     <div class="max-w-[280px] mx-auto relative">
-                        <input type="number" id="quiz-answer" placeholder="Tu respuesta..." class="w-full p-4 border-2 border-gray-100 rounded-2xl text-center text-3xl outline-none focus:border-indigo-500 bg-gray-50">
+                        <input type="text" id="quiz-answer" placeholder="Tu respuesta..." oninput="handleInput(this)" class="w-full p-4 border-2 border-gray-100 rounded-2xl text-center text-3xl outline-none focus:border-indigo-500 bg-gray-50">
                     </div>
 
                     <button onclick="checkAnswer()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg hover:bg-indigo-700 shadow-md transition-all active:scale-95">Comprobar</button>
@@ -179,9 +179,45 @@
         let currentQuestion = { answer: 0 };
         let streak = 0;
 
-        // Utility to format thousands with commas
+        // Formatea números con comas para mostrar
         function fmt(num) {
             return num.toLocaleString('en-US', { maximumFractionDigits: 2 });
+        }
+
+        // Limpia comas para cálculos matemáticos
+        function clean(val) {
+            if (typeof val !== 'string') return val;
+            return parseFloat(val.replace(/,/g, '')) || 0;
+        }
+
+        // Maneja la entrada de texto para formatear miles en tiempo real
+        function handleInput(el) {
+            let cursorPosition = el.selectionStart;
+            let originalLength = el.value.length;
+            
+            // Elimina todo lo que no sea número o punto decimal
+            let value = el.value.replace(/[^\d.]/g, '');
+            
+            // Maneja múltiples puntos decimales
+            let parts = value.split('.');
+            if (parts.length > 2) value = parts[0] + '.' + parts.slice(1).join('');
+
+            if (value === '') {
+                el.value = '';
+                return;
+            }
+
+            // Formatea la parte entera con comas
+            let formattedValue = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            if (parts.length > 1) {
+                formattedValue += '.' + parts[1];
+            }
+
+            el.value = formattedValue;
+
+            // Ajusta la posición del cursor para que no salte al final
+            let newLength = formattedValue.length;
+            el.setSelectionRange(cursorPosition + (newLength - originalLength), cursorPosition + (newLength - originalLength));
         }
 
         function showSection(sectionId) {
@@ -203,8 +239,8 @@
 
         // --- CALC LOGIC A ---
         function calculateA() {
-            const p = parseFloat(document.getElementById('lab-percent').value) || 0;
-            const t = parseFloat(document.getElementById('lab-total').value) || 0;
+            const p = clean(document.getElementById('lab-percent').value);
+            const t = clean(document.getElementById('lab-total').value);
             const res = (p * t) / 100;
             const decimal = p / 100;
             
@@ -214,17 +250,17 @@
                 <p><strong>Paso a paso:</strong></p>
                 <p>1. <b>Método Decimal:</b> Multiplicamos el total (${fmt(t)}) por el decimal (${decimal}):<br>
                 <span class="font-mono text-indigo-600">${fmt(t)} × ${decimal} = ${fmt(res)}</span></p>
-                <p class="mt-2 text-xs">2. <b>Regla de 3:</b> ( ${p} × ${fmt(t)} ) ÷ 100 = ${fmt(res)}</p>
+                <p class="mt-2 text-xs">2. <b>Regla de 3:</b> ( ${fmt(p)} × ${fmt(t)} ) ÷ 100 = ${fmt(res)}</p>
             `;
             document.getElementById('res-a-expl').innerHTML = explanation;
             
-            updateGrid(p, 'indigo', 'Mostrando: ' + p + '% del Calculador A');
+            updateGrid(p, 'indigo', 'Mostrando: ' + fmt(p) + '% del Calculador A');
         }
 
         // --- CALC LOGIC B ---
         function calculateB() {
-            const part = parseFloat(document.getElementById('lab-part-b').value) || 0;
-            const total = parseFloat(document.getElementById('lab-total-b').value) || 1;
+            const part = clean(document.getElementById('lab-part-b').value);
+            const total = clean(document.getElementById('lab-total-b').value) || 1;
             const percent = (part / total) * 100;
             
             document.getElementById('res-b-val').innerText = percent.toFixed(2) + "%";
@@ -309,10 +345,10 @@
         }
 
         function checkAnswer() {
-            const userVal = parseFloat(document.getElementById('quiz-answer').value);
+            const userVal = clean(document.getElementById('quiz-answer').value);
             const feedback = document.getElementById('quiz-feedback');
             
-            if (isNaN(userVal)) return;
+            if (isNaN(userVal) || document.getElementById('quiz-answer').value === '') return;
 
             if (Math.abs(userVal - currentQuestion.answer) < 0.1) {
                 feedback.innerText = "¡Excelente! ✨";
@@ -329,6 +365,7 @@
 
         window.onload = () => {
             calculateA();
+            calculateB();
         };
     </script>
 </body>
