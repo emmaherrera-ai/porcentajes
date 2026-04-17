@@ -91,11 +91,14 @@
 
             <!-- Visual Representation Shared -->
             <div class="bg-white p-6 rounded-2xl card-shadow">
-                <p class="text-sm font-bold text-gray-500 mb-4 uppercase text-center">Representación Visual (Cuadrícula del 100%)</p>
+                <p class="text-sm font-bold text-gray-500 mb-4 uppercase text-center">Visualización del Porcentaje</p>
                 <div id="grid-container" class="grid grid-cols-10 gap-1 aspect-square max-w-[280px] mx-auto border-4 border-gray-50 p-1 bg-gray-50 rounded-lg">
                     <!-- JS fills this -->
                 </div>
-                <p id="grid-label" class="text-center mt-4 text-xs text-gray-400 italic">Cada cuadro representa el 1% de la meta total.</p>
+                <div id="grid-status" class="text-center mt-4 px-4 py-2 rounded-full text-xs font-bold mx-auto w-fit uppercase tracking-wider">
+                    <!-- JS fills this -->
+                </div>
+                <p id="grid-label" class="text-center mt-2 text-xs text-gray-400 italic">Cada cuadro representa el 1% del total.</p>
             </div>
         </section>
 
@@ -215,7 +218,7 @@
             `;
             document.getElementById('res-a-expl').innerHTML = explanation;
             
-            updateGrid(p, 'indigo');
+            updateGrid(p, 'indigo', 'Mostrando: ' + p + '% del Calculador A');
         }
 
         // --- CALC LOGIC B ---
@@ -235,15 +238,20 @@
             `;
             document.getElementById('res-b-expl').innerHTML = explanation;
             
-            updateGrid(percent, 'emerald');
+            updateGrid(percent, 'emerald', 'Mostrando: ' + percent.toFixed(1) + '% del Calculador B');
         }
 
-        function updateGrid(percent, color) {
+        function updateGrid(percent, color, labelText) {
             const container = document.getElementById('grid-container');
+            const status = document.getElementById('grid-status');
             container.innerHTML = '';
             const filledCount = Math.min(100, Math.max(0, Math.round(percent)));
             
             const colorClass = color === 'indigo' ? 'bg-indigo-500' : 'bg-emerald-500';
+            const textClass = color === 'indigo' ? 'bg-indigo-100 text-indigo-700' : 'bg-emerald-100 text-emerald-700';
+            
+            status.innerText = labelText;
+            status.className = `text-center mt-4 px-4 py-2 rounded-full text-xs font-bold mx-auto w-fit uppercase tracking-wider ${textClass}`;
 
             for (let i = 0; i < 100; i++) {
                 const cell = document.createElement('div');
@@ -321,7 +329,6 @@
 
         window.onload = () => {
             calculateA();
-            calculateB();
         };
     </script>
 </body>
